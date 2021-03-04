@@ -1,10 +1,20 @@
 package com.klalibrary.bean;
 
 public class UserRequestNotes {
-
+	private int itineraryId;
 	private String notes;
 	private String remarks;
 	private String attachments;
+	
+	public UserRequestNotes() {
+	}
+	
+	public int getItineraryId() {
+		return itineraryId;
+	}
+	public void setItineraryId(int itineraryId) {
+		this.itineraryId = itineraryId;
+	}
 	public String getNotes() {
 		return notes;
 	}

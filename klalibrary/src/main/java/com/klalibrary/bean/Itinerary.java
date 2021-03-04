@@ -7,11 +7,14 @@ public class Itinerary {
 	private String genre;
 	private String author;
 	private String publication;
-	public int getBookId() {
+	
+	public Itinerary() {
+	}
+	public int getItnieraryId() {
 		return itnieraryId;
 	}
-	public void setBookId(int bookId) {
-		this.itnieraryId = bookId;
+	public void setItnieraryId(int itnieraryId) {
+		this.itnieraryId = itnieraryId;
 	}
 	public String getName() {
 		return name;

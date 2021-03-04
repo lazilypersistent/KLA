@@ -7,6 +7,11 @@ public class User {
 	private String lastName;
 	private String gender;
 	private String age;
+	
+	public User() {
+		// TODO Auto-generated constructor stub
+	}
+	
 	public int getId() {
 		return userId;
 	}

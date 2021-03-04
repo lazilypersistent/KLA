@@ -1,5 +1,7 @@
 package com.klalibrary.rest;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,8 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.klalibrary.bean.Request;
 import com.klalibrary.bean.User;
-import com.klalibrary.daointerface.UserDao;
+import com.klalibrary.serviceinterface.DashboardService;
 import com.klalibrary.serviceinterface.UserService;
 
 @org.springframework.web.bind.annotation.RestController
@@ -17,6 +20,9 @@ public class RestController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private DashboardService dashboardService;
 	
 	@RequestMapping("/")
 	public String hello() {
@@ -28,17 +34,17 @@ public class RestController {
 		return userService.getUserDetails(id);
     }
 	
-	@GetMapping("/userLibData")
-    public String get() {
-        return "This is get operation to load dashboard.";
+	@GetMapping("/requests/{id}")
+    public List<Request> get(@PathVariable int userId) {
+        return dashboardService.userRequests(userId);
     }
 
-    @GetMapping("/itinerary")
-    public String getItinerary(String input) {
+    @PostMapping("/request")
+    public String saveItinerary(String input) {
     	return "This is get itinerary operation.";
     }
     
-    @GetMapping("/draftItinerary")
+    @PostMapping("/draftRequest")
     public String draftItinerary(String input) {
     	return "This is draft itinerary operation.";
     }
