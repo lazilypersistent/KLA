@@ -9,6 +9,6 @@ public interface DashboardService {
 	
 	List<Request> userRequests(int userId);
 	List<UserRequestNotes> userRequestNotes(int itineraryId);
-	String saveItinerary(Request request);
+	String saveItinerary(List<Request> requestList);
 
 }

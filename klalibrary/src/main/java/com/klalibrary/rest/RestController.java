@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.klalibrary.bean.Request;
 import com.klalibrary.bean.User;
+import com.klalibrary.bean.UserRequestNotes;
 import com.klalibrary.serviceinterface.DashboardService;
 import com.klalibrary.serviceinterface.UserService;
 
@@ -34,18 +36,24 @@ public class RestController {
 		return userService.getUserDetails(id);
     }
 	
-	@GetMapping("/requests/{id}")
-    public List<Request> get(@PathVariable int userId) {
+	@GetMapping("/requests/{userId}")
+    public List<Request> getRequestList(@PathVariable int userId) {
         return dashboardService.userRequests(userId);
     }
 
     @PostMapping("/request")
-    public String saveItinerary(String input) {
+    public String saveItinerary(@RequestBody List<Request> requestList) {
+    	System.out.println("input received: printing below");
+    	for(Request request: requestList) {
+    		System.out.println(request.getUserId());
+    	}
+    	System.out.println("input print ended: printed above");
+    	return dashboardService.saveItinerary(requestList);
+    }
+    
+    @PostMapping("/attachments")
+    public String saveAttachments(UserRequestNotes notesAndAttachments) {
     	return "This is get itinerary operation.";
     }
     
-    @PostMapping("/draftRequest")
-    public String draftItinerary(String input) {
-    	return "This is draft itinerary operation.";
-    }
 }

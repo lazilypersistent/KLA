@@ -3,12 +3,14 @@ package com.klalibrary.serviceinterfaceimpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.klalibrary.bean.Request;
 import com.klalibrary.bean.UserRequestNotes;
 import com.klalibrary.daointerface.DashboardDao;
 import com.klalibrary.serviceinterface.DashboardService;
 
+@Service
 public class DashboardServiceImpl implements DashboardService {
 	
 	@Autowired
@@ -27,9 +29,8 @@ public class DashboardServiceImpl implements DashboardService {
 	}
 
 	@Override
-	public String saveItinerary(Request request) {
-		// TODO Auto-generated method stub
-		return null;
+	public String saveItinerary(List<Request> requestList) {
+		return dashboardDao.saveItinerary(requestList);
 	}
 
 }

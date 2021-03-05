@@ -7,6 +7,7 @@ public class Itinerary {
 	private String genre;
 	private String author;
 	private String publication;
+	private String itinerayType;
 	
 	public Itinerary() {
 	}
@@ -39,6 +40,12 @@ public class Itinerary {
 	}
 	public void setPublication(String publication) {
 		this.publication = publication;
+	}
+	public String getItinerayType() {
+		return itinerayType;
+	}
+	public void setItinerayType(String itinerayType) {
+		this.itinerayType = itinerayType;
 	}
 	
 	

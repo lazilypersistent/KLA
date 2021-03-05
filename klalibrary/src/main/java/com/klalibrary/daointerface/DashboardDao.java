@@ -9,4 +9,5 @@ public interface DashboardDao {
 
 	List<Request> userRequests(int userId);
 	List<UserRequestNotes> userRequestNotes(int itineraryId);
+	String saveItinerary(List<Request> requestList);
 }
