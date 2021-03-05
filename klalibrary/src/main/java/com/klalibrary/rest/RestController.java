@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.klalibrary.bean.Request;
 import com.klalibrary.bean.User;
-import com.klalibrary.bean.UserRequestNotes;
 import com.klalibrary.serviceinterface.DashboardService;
 import com.klalibrary.serviceinterface.UserService;
 
@@ -36,9 +37,9 @@ public class RestController {
 		return userService.getUserDetails(id);
     }
 	
-	@GetMapping("/requests/{userId}")
-    public List<Request> getRequestList(@PathVariable int userId) {
-        return dashboardService.userRequests(userId);
+	@GetMapping("/requests/{id}")
+    public List<Request> getRequestList(@PathVariable int id) {
+        return dashboardService.userRequests(id);
     }
 
     @PostMapping("/request")
@@ -52,8 +53,43 @@ public class RestController {
     }
     
     @PostMapping("/attachments")
-    public String saveAttachments(UserRequestNotes notesAndAttachments) {
-    	return "This is get itinerary operation.";
+    public String saveAttachments(@RequestParam("file") MultipartFile file) {
+
+//    	FileDB FileDB = new FileDB(fileName, file.getContentType(), file.getBytes());
+
+        dashboardService.saveAttachments(file);
+        
+    	return "saved";
+    
     }
+    
+    @GetMapping("/attachments/{id}")
+    public String fetchAttachments(@PathVariable int id) {
+
+//    	FileDB FileDB = new FileDB(fileName, file.getContentType(), file.getBytes());
+
+        dashboardService.fetchAttachments(id);
+        
+    	return "saved";
+    
+    }
+    
+//    @PostMapping("/upload/db")
+//    public ResponseEntity uploadToDB(@RequestParam("file") MultipartFile file) {
+//    	Document doc = new Document();
+//    	String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+//    	doc.setDocName(fileName);
+//    	try {
+//    		doc.setFile(file.getBytes());
+//    	} catch (IOException e) {
+//    		e.printStackTrace();
+//    	}
+//    	documentDao.save(doc);
+//    	String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+//    			.path("/files/download/")
+//    			.path(fileName).path("/db")
+//    			.toUriString();
+//    	return ResponseEntity.ok(fileDownloadUri);
+//    }
     
 }

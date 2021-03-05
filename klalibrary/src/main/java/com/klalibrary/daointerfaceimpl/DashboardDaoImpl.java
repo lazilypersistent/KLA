@@ -1,5 +1,6 @@
 package com.klalibrary.daointerfaceimpl;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.klalibrary.bean.Itinerary;
 import com.klalibrary.bean.Request;
@@ -77,6 +79,32 @@ public class DashboardDaoImpl implements DashboardDao {
 		return "Successfull";
 		
 //		return "Failure";
+	}
+
+	@Override
+	public String saveAttachments(MultipartFile file) {
+		String sql = "INSERT INTO public.attachments(\n"
+				+ "	notes, remarks, attachment_name, attachment_type, attachment_bytes)\n"
+				+ "	VALUES ('remarks', 'attachments', :attachmentName, :attachmentType,:attachmentBytes);";
+		try {
+			SqlParameterSource param = new MapSqlParameterSource()
+					.addValue("remarks", "remarks")
+					.addValue("notes", "notes")
+					.addValue("attachmentName", file.getName())
+					.addValue("attachmentType", file.getContentType())
+					.addValue("attachmentBytes", file.getBytes());
+			KeyHolder holder = new GeneratedKeyHolder();
+			template.update(sql, param, holder);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return "hello";
+	}
+
+	@Override
+	public MultipartFile fetchAttachments(int requestId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

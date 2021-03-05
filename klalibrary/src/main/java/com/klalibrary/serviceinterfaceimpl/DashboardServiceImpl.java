@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.klalibrary.bean.Request;
 import com.klalibrary.bean.UserRequestNotes;
@@ -31,6 +32,18 @@ public class DashboardServiceImpl implements DashboardService {
 	@Override
 	public String saveItinerary(List<Request> requestList) {
 		return dashboardDao.saveItinerary(requestList);
+	}
+
+	@Override
+	public String saveAttachments(MultipartFile file) {
+		dashboardDao.saveAttachments(file);
+		return "buy buy";
+	}
+
+	@Override
+	public MultipartFile fetchAttachments(int requestId) {
+		dashboardDao.fetchAttachments(requestId);
+		return null;
 	}
 
 }
