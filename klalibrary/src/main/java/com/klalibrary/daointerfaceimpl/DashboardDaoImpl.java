@@ -83,7 +83,8 @@ public class DashboardDaoImpl implements DashboardDao {
 //		System.out.println(request.getItineraryList());
 		request.setRequestId((int)holder.getKeys().get("request_id"));
 		for (Itinerary itinerary : request.getItineraryList()) {
-			String itineraryInsert = "INSERT INTO public.itinerary VALUES (:requestId, :name, :genre, :author, :publication, :itineraryType);";
+			String itineraryInsert = "INSERT INTO public.itinerary(\n"
+					+ "	request_id, name, genre, author, publication, itinerary_type) VALUES (:requestId, :name, :genre, :author, :publication, :itineraryType);";
 			SqlParameterSource itineraryPatam = new MapSqlParameterSource()
 					.addValue("requestId", request.getRequestId())
 					.addValue("name", itinerary.getName())
