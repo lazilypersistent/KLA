@@ -48,7 +48,7 @@ public class RestController {
     }
 
     @PostMapping("/request")
-    public String saveItinerary(@RequestBody Request request) {
+    public int saveItinerary(@RequestBody Request request) {
     	System.out.println(request.getItineraryList());
     	return dashboardService.saveItinerary(request);
     }

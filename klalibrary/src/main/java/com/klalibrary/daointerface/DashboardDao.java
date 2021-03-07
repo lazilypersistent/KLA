@@ -8,7 +8,7 @@ import com.klalibrary.bean.Request;
 public interface DashboardDao {
 
 	List<Request> userRequests(int userId);
-	String saveItinerary(Request request);
+	int saveItinerary(Request request);
 	String saveAttachments(List<Attachment>  attachmentList);
 	List<Attachment> fetchAttachments(int requestId);
 }

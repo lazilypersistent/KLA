@@ -23,7 +23,7 @@ public class DashboardServiceImpl implements DashboardService {
 	}
 
 	@Override
-	public String saveItinerary(Request request) {
+	public int saveItinerary(Request request) {
 		return dashboardDao.saveItinerary(request);
 	}
 

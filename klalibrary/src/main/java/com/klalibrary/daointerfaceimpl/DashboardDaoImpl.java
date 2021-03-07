@@ -63,7 +63,7 @@ public class DashboardDaoImpl implements DashboardDao {
 	}
 
 	@Override
-	public String saveItinerary(Request request) {
+	public int saveItinerary(Request request) {
 		String sql = "INSERT INTO public.requests (applied_date, request_status, type_of_request, user_id)\n"
 				+ "VALUES (:appliedDate, :requestStatus, :typeOfRequest, :userId); ";
 		SqlParameterSource param = new MapSqlParameterSource()
@@ -75,7 +75,7 @@ public class DashboardDaoImpl implements DashboardDao {
 		template.update(sql, param, holder);
 //		System.out.println("holder key:" + holder.getKey());
 //		System.out.println("holder keys:" + holder.getKeys());
-//		System.out.println("holder keys:" + holder.getKeys().get("request_id"));
+		System.out.println("holder keys:" + holder.getKeys().get("request_id"));
 //		System.out.println(holder.getKey());
 //		System.out.println(holder.getKey());
 		
@@ -93,7 +93,7 @@ public class DashboardDaoImpl implements DashboardDao {
 					.addValue("publication", itinerary.getPublication());
 			template.update(itineraryInsert, itineraryPatam);
 		}
-		return "Successfull";
+		return request.getRequestId();
 	}
 
 	@Override
