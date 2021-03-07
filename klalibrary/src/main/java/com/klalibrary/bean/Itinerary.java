@@ -2,7 +2,6 @@ package com.klalibrary.bean;
 
 public class Itinerary {
 
-	private int itnieraryId;
 	private String name;
 	private String genre;
 	private String author;
@@ -11,12 +10,7 @@ public class Itinerary {
 	
 	public Itinerary() {
 	}
-	public int getItnieraryId() {
-		return itnieraryId;
-	}
-	public void setItnieraryId(int itnieraryId) {
-		this.itnieraryId = itnieraryId;
-	}
+	
 	public String getName() {
 		return name;
 	}

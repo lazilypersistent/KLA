@@ -1,28 +1,19 @@
 package com.klalibrary.bean;
 
+import java.util.List;
+
 public class Request {
 	
 	private int requestId;
 	private String appliedDate;
 	private String requestStatus;
 	private String typeOfRequest;
-	private Itinerary itinerary;
+	private List<Itinerary> itineraryList;
 	private int userId;
 	private String notes;
 	private String remarks;
 	
 	public Request() {
-	}
-	
-	public Request(int requestId, String appliedDate, String requestStatus, String typeOfRequest, Itinerary itinerary,
-			int userId) {
-		super();
-		this.requestId = requestId;
-		this.appliedDate = appliedDate;
-		this.requestStatus = requestStatus;
-		this.typeOfRequest = typeOfRequest;
-		this.itinerary = itinerary;
-		this.userId = userId;
 	}
 
 	public int getRequestId() {
@@ -51,12 +42,12 @@ public class Request {
 		this.typeOfRequest = typeOfRequest;
 	}
 	
-	public Itinerary getItinerary() {
-		return itinerary;
+	public List<Itinerary> getItineraryList() {
+		return itineraryList;
 	}
 
-	public void setItinerary(Itinerary itinerary) {
-		this.itinerary = itinerary;
+	public void setItineraryList(List<Itinerary> itineraryList) {
+		this.itineraryList = itineraryList;
 	}
 
 	public String getRequestStatus() {

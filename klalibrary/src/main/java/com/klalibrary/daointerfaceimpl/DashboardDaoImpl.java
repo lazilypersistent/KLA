@@ -26,10 +26,10 @@ public class DashboardDaoImpl implements DashboardDao {
 
 	@Override
 	public List<Request> userRequests(int userId) {
-		String sql = "select * from public.requests r, public.itinerary i where r.itinerary_id = i.itinerary_id and user_id=:user_id;";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("user_id", userId);
+		String requestSql = "select * from public.requests r where user_id=:userId;";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
 
-		List<Request> userRequestList = template.query(sql, param, new RowMapper<Request>() {
+		List<Request> userRequestList = template.query(requestSql, param, new RowMapper<Request>() {
 			@Override
 			public Request mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Request userRequest = new Request();
@@ -37,40 +37,55 @@ public class DashboardDaoImpl implements DashboardDao {
 				userRequest.setRequestId(rs.getInt("request_id"));
 				userRequest.setRequestStatus(rs.getString("request_status"));
 				userRequest.setTypeOfRequest(rs.getString("type_of_request"));
-				Itinerary itinerary = new Itinerary();
-				itinerary.setItnieraryId(rs.getInt("itinerary_id"));
-				itinerary.setAuthor(rs.getString("author"));
-				itinerary.setGenre(rs.getString("genre"));
-				itinerary.setName(rs.getString("name"));
-				itinerary.setPublication(rs.getString("publication"));
-				itinerary.setItinerayType(rs.getString("itinerary_type"));
-				userRequest.setItinerary(itinerary);
+				
+				String sql = "select * from public.itinerary i where i.request_id=:requestId;";
+				SqlParameterSource param = new MapSqlParameterSource().addValue("requestId", userRequest.getRequestId());
+
+				List<Itinerary> itineraryList = template.query(sql, param, new RowMapper<Itinerary>() {
+					@Override
+					public Itinerary mapRow(ResultSet rs, int rowNum) throws SQLException {
+						
+						Itinerary itinerary = new Itinerary();
+						itinerary.setAuthor(rs.getString("author"));
+						itinerary.setGenre(rs.getString("genre"));
+						itinerary.setName(rs.getString("name"));
+						itinerary.setPublication(rs.getString("publication"));
+						itinerary.setItinerayType(rs.getString("itinerary_type"));
+						return itinerary;
+					}
+
+				});
+				userRequest.setItineraryList(itineraryList);
 				return userRequest;
 			}
-
 		});
 		return userRequestList;
 	}
 
 	@Override
-	public String saveItinerary(List<Request> requestList) {
-		for (Request request: requestList) {
-			String sql = "INSERT INTO public.requests (applied_date, request_status, type_of_request, user_id,itinerary_id)\n"
-					+ "VALUES (:appliedDate, :requestStatus, :typeOfRequest, :userId, :itineraryId); ";
-			SqlParameterSource param = new MapSqlParameterSource()
-					.addValue("userId", request.getUserId())
-					.addValue("appliedDate", request.getAppliedDate())
-					.addValue("requestStatus", request.getRequestStatus())
-					.addValue("typeOfRequest", request.getTypeOfRequest())
-					.addValue("itineraryId", request.getItinerary().getItnieraryId());
-			KeyHolder holder = new GeneratedKeyHolder();
-			template.update(sql, param, holder);
-			//request.setRequestId(holder.getKey().intValue());
+	public String saveItinerary(Request request) {
+		String sql = "INSERT INTO public.requests (applied_date, request_status, type_of_request, user_id,itinerary_id)\n"
+				+ "VALUES (:appliedDate, :requestStatus, :typeOfRequest, :userId, :itineraryId); ";
+		SqlParameterSource param = new MapSqlParameterSource()
+				.addValue("userId", request.getUserId())
+				.addValue("appliedDate", request.getAppliedDate())
+				.addValue("requestStatus", request.getRequestStatus())
+				.addValue("typeOfRequest", request.getTypeOfRequest());
+		KeyHolder holder = new GeneratedKeyHolder();
+		template.update(sql, param, holder);
+		for (Itinerary itinerary : request.getItineraryList()) {
+			
+			String itineraryInsert = "INSERT INTO public.itinerary VALUES (:requestId, :name, :genre, :author, :publication, :itineraryType);";
+			SqlParameterSource itineraryPatam = new MapSqlParameterSource()
+					.addValue("requestId", holder.getKey().intValue())
+					.addValue("name", itinerary.getName())
+					.addValue("genre", itinerary.getGenre())
+					.addValue("author", itinerary.getAuthor())
+					.addValue("itineraryType", itinerary.getItinerayType())
+					.addValue("publication", itinerary.getPublication());
+			template.update(itineraryInsert, itineraryPatam);
 		}
-		
 		return "Successfull";
-		
-//		return "Failure";
 	}
 
 	@Override

@@ -48,13 +48,8 @@ public class RestController {
     }
 
     @PostMapping("/request")
-    public String saveItinerary(@RequestBody List<Request> requestList) {
-    	System.out.println("input received: printing below");
-    	for(Request request: requestList) {
-    		System.out.println(request.getUserId());
-    	}
-    	System.out.println("input print ended: printed above");
-    	return dashboardService.saveItinerary(requestList);
+    public String saveItinerary(@RequestBody Request request) {
+    	return dashboardService.saveItinerary(request);
     }
     
     @PostMapping("/attachments/{requestId}")
