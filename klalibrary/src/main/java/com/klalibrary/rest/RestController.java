@@ -42,13 +42,14 @@ public class RestController {
 		return userService.getUserDetails(id);
     }
 	
-	@GetMapping("/requests/{id}")
-    public List<Request> getRequestList(@PathVariable int id) {
-        return dashboardService.userRequests(id);
+	@GetMapping("/requests/{userId}")
+    public List<Request> getRequestList(@PathVariable int userId) {
+        return dashboardService.userRequests(userId);
     }
 
     @PostMapping("/request")
     public String saveItinerary(@RequestBody Request request) {
+    	System.out.println(request.getItineraryList());
     	return dashboardService.saveItinerary(request);
     }
     

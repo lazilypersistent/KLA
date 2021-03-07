@@ -64,8 +64,8 @@ public class DashboardDaoImpl implements DashboardDao {
 
 	@Override
 	public String saveItinerary(Request request) {
-		String sql = "INSERT INTO public.requests (applied_date, request_status, type_of_request, user_id,itinerary_id)\n"
-				+ "VALUES (:appliedDate, :requestStatus, :typeOfRequest, :userId, :itineraryId); ";
+		String sql = "INSERT INTO public.requests (applied_date, request_status, type_of_request, user_id)\n"
+				+ "VALUES (:appliedDate, :requestStatus, :typeOfRequest, :userId); ";
 		SqlParameterSource param = new MapSqlParameterSource()
 				.addValue("userId", request.getUserId())
 				.addValue("appliedDate", request.getAppliedDate())
@@ -73,11 +73,19 @@ public class DashboardDaoImpl implements DashboardDao {
 				.addValue("typeOfRequest", request.getTypeOfRequest());
 		KeyHolder holder = new GeneratedKeyHolder();
 		template.update(sql, param, holder);
+//		System.out.println("holder key:" + holder.getKey());
+//		System.out.println("holder keys:" + holder.getKeys());
+//		System.out.println("holder keys:" + holder.getKeys().get("request_id"));
+//		System.out.println(holder.getKey());
+//		System.out.println(holder.getKey());
+		
+//		request.setRequestId(holder.getKey());
+//		System.out.println(request.getItineraryList());
+		request.setRequestId((int)holder.getKeys().get("request_id"));
 		for (Itinerary itinerary : request.getItineraryList()) {
-			
 			String itineraryInsert = "INSERT INTO public.itinerary VALUES (:requestId, :name, :genre, :author, :publication, :itineraryType);";
 			SqlParameterSource itineraryPatam = new MapSqlParameterSource()
-					.addValue("requestId", holder.getKey().intValue())
+					.addValue("requestId", request.getRequestId())
 					.addValue("name", itinerary.getName())
 					.addValue("genre", itinerary.getGenre())
 					.addValue("author", itinerary.getAuthor())

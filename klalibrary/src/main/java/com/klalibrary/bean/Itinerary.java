@@ -41,6 +41,12 @@ public class Itinerary {
 	public void setItinerayType(String itinerayType) {
 		this.itinerayType = itinerayType;
 	}
+
+	@Override
+	public String toString() {
+		return "Itinerary [name=" + name + ", genre=" + genre + ", author=" + author + ", publication=" + publication
+				+ ", itinerayType=" + itinerayType + "]";
+	}
 	
 	
 }
