@@ -8,6 +8,8 @@ public class Request {
 	private String typeOfRequest;
 	private Itinerary itinerary;
 	private int userId;
+	private String notes;
+	private String remarks;
 	
 	public Request() {
 	}
@@ -70,6 +72,22 @@ public class Request {
 
 	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
 	}
 	
 }

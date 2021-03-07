@@ -1,6 +1,10 @@
 package com.klalibrary.rest;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Deflater;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.klalibrary.bean.Attachment;
 import com.klalibrary.bean.Request;
 import com.klalibrary.bean.User;
 import com.klalibrary.serviceinterface.DashboardService;
@@ -52,27 +57,89 @@ public class RestController {
     	return dashboardService.saveItinerary(requestList);
     }
     
-    @PostMapping("/attachments")
-    public String saveAttachments(@RequestParam("file") MultipartFile file) {
+    @PostMapping("/attachments/{requestId}")
+    public String saveAttachments(@RequestParam("file") List<MultipartFile> fileList, @PathVariable int requestId) {
 
-//    	FileDB FileDB = new FileDB(fileName, file.getContentType(), file.getBytes());
-
-        dashboardService.saveAttachments(file);
-        
-    	return "saved";
-    
+    	List<Attachment> attachmentList = new ArrayList<Attachment>(); 
+    	for(MultipartFile file : fileList) {
+    		Attachment attachment = new Attachment();
+    		try {
+				attachment.setAttachmentBytes(file.getBytes());
+			} catch (IOException e) {
+				e.printStackTrace();
+				return "could not get filebytes";
+			}
+    		attachment.setRequestId(requestId);
+    		attachment.setAttachmentName(file.getOriginalFilename());
+    		attachment.setAttachmentType(file.getContentType());
+    		attachment.setRequestId(requestId);
+    		attachmentList.add(attachment);
+    		try {
+				System.out.println("size of the file :" + file.getBytes().length);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+    		try {
+    			System.out.println("size of the file after compression:" + compressBytes(file.getBytes()).length);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    	}
+    	if(attachmentList.isEmpty()) {
+    		return "Please add a minimum of one file";
+    	}else {
+    		return dashboardService.saveAttachments(attachmentList);
+    	}
     }
     
-    @GetMapping("/attachments/{id}")
-    public String fetchAttachments(@PathVariable int id) {
+	public byte[] compressBytes(byte[] data) {
 
-//    	FileDB FileDB = new FileDB(fileName, file.getContentType(), file.getBytes());
+		Deflater deflater = new Deflater();
 
-        dashboardService.fetchAttachments(id);
-        
-    	return "saved";
+		deflater.setInput(data);
+
+		deflater.finish();
+
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+
+		byte[] buffer = new byte[1024];
+
+		while (!deflater.finished()) {
+
+			int count = deflater.deflate(buffer);
+
+			outputStream.write(buffer, 0, count);
+
+		}
+
+		try {
+
+			outputStream.close();
+
+		} catch (IOException e) {
+
+		}
+
+		System.out.println("Compressed Image Byte Size - " + outputStream.toByteArray().length);
+
+		return outputStream.toByteArray();
+	}
+
+
     
+    @GetMapping("/attachments/{requestId}")
+    public List<Attachment> fetchAttachments(@PathVariable int requestId) {
+    	System.out.println("input request id :" + requestId);
+    	return dashboardService.fetchAttachments(requestId);
     }
+    
+//    @GetMapping(path = { "/get/{imageName}" })
+//	public List<UserRequestNotes> getImage(@PathVariable("imageName") String imageName) throws IOException {
+//		final Optional<ImageModel> retrievedImage = imageRepository.findByName(imageName);
+//		ImageModel img = new ImageModel(retrievedImage.get().getName(), retrievedImage.get().getType(),
+//				decompressBytes(retrievedImage.get().getPicByte()));
+//		return img;
+//	}
     
 //    @PostMapping("/upload/db")
 //    public ResponseEntity uploadToDB(@RequestParam("file") MultipartFile file) {

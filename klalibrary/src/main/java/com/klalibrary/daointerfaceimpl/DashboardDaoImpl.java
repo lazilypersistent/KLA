@@ -1,6 +1,5 @@
 package com.klalibrary.daointerfaceimpl;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -13,11 +12,10 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.multipart.MultipartFile;
 
+import com.klalibrary.bean.Attachment;
 import com.klalibrary.bean.Itinerary;
 import com.klalibrary.bean.Request;
-import com.klalibrary.bean.UserRequestNotes;
 import com.klalibrary.daointerface.DashboardDao;
 
 @Repository
@@ -55,12 +53,6 @@ public class DashboardDaoImpl implements DashboardDao {
 	}
 
 	@Override
-	public List<UserRequestNotes> userRequestNotes(int itineraryId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public String saveItinerary(List<Request> requestList) {
 		for (Request request: requestList) {
 			String sql = "INSERT INTO public.requests (applied_date, request_status, type_of_request, user_id,itinerary_id)\n"
@@ -82,29 +74,45 @@ public class DashboardDaoImpl implements DashboardDao {
 	}
 
 	@Override
-	public String saveAttachments(MultipartFile file) {
-		String sql = "INSERT INTO public.attachments(\n"
-				+ "	notes, remarks, attachment_name, attachment_type, attachment_bytes)\n"
-				+ "	VALUES ('remarks', 'attachments', :attachmentName, :attachmentType,:attachmentBytes);";
-		try {
-			SqlParameterSource param = new MapSqlParameterSource()
-					.addValue("remarks", "remarks")
-					.addValue("notes", "notes")
-					.addValue("attachmentName", file.getName())
-					.addValue("attachmentType", file.getContentType())
-					.addValue("attachmentBytes", file.getBytes());
-			KeyHolder holder = new GeneratedKeyHolder();
-			template.update(sql, param, holder);
-		}catch(Exception e) {
-			e.printStackTrace();
+	public String saveAttachments(List<Attachment>  attachmentList) {
+		for(Attachment attachment: attachmentList) {
+			String sql = "INSERT INTO public.attachments(\n"
+					+ "	request_id, attachment_name, attachment_type, attachment_bytes)\n"
+					+ "	VALUES (:requestId, :attachmentName, :attachmentType,:attachmentBytes);";
+			try {
+				SqlParameterSource param = new MapSqlParameterSource()
+						.addValue("requestId", attachment.getRequestId())
+						.addValue("attachmentName", attachment.getAttachmentName())
+						.addValue("attachmentType", attachment.getAttachmentType())
+						.addValue("attachmentBytes", attachment.getAttachmentBytes());
+				KeyHolder holder = new GeneratedKeyHolder();
+				template.update(sql, param, holder);
+			}catch(Exception e) {
+				e.printStackTrace();
+				return "The db insertion failed";
+			}
 		}
-		return "hello";
+		
+		return "The attachment/s were saved successfully";
 	}
 
 	@Override
-	public MultipartFile fetchAttachments(int requestId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public List<Attachment> fetchAttachments(int requestId) {
+		String sql = "select * from public.attachments where request_id=:requestId;";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("requestId", requestId);
 
+		List<Attachment> attachmentList = template.query(sql, param, new RowMapper<Attachment>() {
+			@Override
+			public Attachment mapRow(ResultSet rs, int rowNum) throws SQLException {
+				Attachment attachment = new Attachment();
+				attachment.setAttachmentBytes(rs.getBytes("attachment_bytes"));
+				attachment.setAttachmentName(rs.getString("attachment_name"));
+				attachment.setAttachmentType(rs.getString("attachment_type"));
+				attachment.setRequestId(rs.getInt("request_id"));
+				return attachment;
+			}
+
+		});
+		return attachmentList;
+	}
 }
