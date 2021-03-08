@@ -1,14 +1,14 @@
-package com.klalibrary.serviceinterface;
+package com.klalibrary.daointerface;
 
 import java.util.List;
 
 import com.klalibrary.bean.Attachment;
 import com.klalibrary.bean.Request;
 
-public interface DashboardService {
-	
+public interface LibraryRequestDao {
+
 	List<Request> userRequests(int userId);
 	int saveItinerary(Request request);
-	String saveAttachments(List<Attachment> attachmentList);
+	String saveAttachments(List<Attachment>  attachmentList);
 	List<Attachment> fetchAttachments(int requestId);
 }

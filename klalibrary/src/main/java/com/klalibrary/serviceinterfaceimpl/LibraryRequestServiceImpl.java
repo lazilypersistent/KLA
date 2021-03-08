@@ -7,14 +7,14 @@ import org.springframework.stereotype.Service;
 
 import com.klalibrary.bean.Attachment;
 import com.klalibrary.bean.Request;
-import com.klalibrary.daointerface.DashboardDao;
-import com.klalibrary.serviceinterface.DashboardService;
+import com.klalibrary.daointerface.LibraryRequestDao;
+import com.klalibrary.serviceinterface.LibraryRequestService;
 
 @Service
-public class DashboardServiceImpl implements DashboardService {
+public class LibraryRequestServiceImpl implements LibraryRequestService {
 	
 	@Autowired
-	private DashboardDao dashboardDao;
+	private LibraryRequestDao dashboardDao;
 
 	@Override
 	public List<Request> userRequests(int userId) {

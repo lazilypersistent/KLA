@@ -16,10 +16,10 @@ import org.springframework.stereotype.Repository;
 import com.klalibrary.bean.Attachment;
 import com.klalibrary.bean.Itinerary;
 import com.klalibrary.bean.Request;
-import com.klalibrary.daointerface.DashboardDao;
+import com.klalibrary.daointerface.LibraryRequestDao;
 
 @Repository
-public class DashboardDaoImpl implements DashboardDao {
+public class LibraryRequestDaoImpl implements LibraryRequestDao {
 	
 	@Autowired
 	NamedParameterJdbcTemplate template;
@@ -73,14 +73,6 @@ public class DashboardDaoImpl implements DashboardDao {
 				.addValue("typeOfRequest", request.getTypeOfRequest());
 		KeyHolder holder = new GeneratedKeyHolder();
 		template.update(sql, param, holder);
-//		System.out.println("holder key:" + holder.getKey());
-//		System.out.println("holder keys:" + holder.getKeys());
-		System.out.println("holder keys:" + holder.getKeys().get("request_id"));
-//		System.out.println(holder.getKey());
-//		System.out.println(holder.getKey());
-		
-//		request.setRequestId(holder.getKey());
-//		System.out.println(request.getItineraryList());
 		request.setRequestId((int)holder.getKeys().get("request_id"));
 		for (Itinerary itinerary : request.getItineraryList()) {
 			String itineraryInsert = "INSERT INTO public.itinerary(\n"
