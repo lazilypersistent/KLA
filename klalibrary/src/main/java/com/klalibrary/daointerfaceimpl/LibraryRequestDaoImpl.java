@@ -64,12 +64,14 @@ public class LibraryRequestDaoImpl implements LibraryRequestDao {
 
 	@Override
 	public int saveItinerary(Request request) {
-		String sql = "INSERT INTO public.requests (applied_date, request_status, type_of_request, user_id)\n"
-				+ "VALUES (:appliedDate, :requestStatus, :typeOfRequest, :userId); ";
+		String sql = "INSERT INTO public.requests (applied_date, request_status, type_of_request, user_id,notes, remarks)\n"
+				+ "VALUES (:appliedDate, :requestStatus, :typeOfRequest, :userId, :notes, :remarks); ";
 		SqlParameterSource param = new MapSqlParameterSource()
 				.addValue("userId", request.getUserId())
 				.addValue("appliedDate", request.getAppliedDate())
 				.addValue("requestStatus", request.getRequestStatus())
+				.addValue("notes", request.getNotes())
+				.addValue("remarks", request.getRemarks())
 				.addValue("typeOfRequest", request.getTypeOfRequest());
 		KeyHolder holder = new GeneratedKeyHolder();
 		template.update(sql, param, holder);
