@@ -37,6 +37,8 @@ public class LibraryRequestDaoImpl implements LibraryRequestDao {
 				userRequest.setRequestId(rs.getInt("request_id"));
 				userRequest.setRequestStatus(rs.getString("request_status"));
 				userRequest.setTypeOfRequest(rs.getString("type_of_request"));
+				userRequest.setNotes(rs.getString("notes"));
+				userRequest.setRemarks(rs.getString("remarks"));
 				
 				String sql = "select * from public.itinerary i where i.request_id=:requestId;";
 				SqlParameterSource param = new MapSqlParameterSource().addValue("requestId", userRequest.getRequestId());
